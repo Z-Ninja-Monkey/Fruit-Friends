@@ -8,7 +8,6 @@ function setup() {
 	new Canvas(1000, 590);
 	world.gravity.y = 15;
 	img = loadImage('assets/thingy5.png');
-	CreateLine(10,400,500,500);
 	thingy = new Sprite(100,30);
 	thingy.img = img;
 	thingy.r = 20;
@@ -22,16 +21,19 @@ function draw() {
 	clear();
 	background('gray');
 	if (mouse.pressing()){
-		if (Math.abs((mouse.x - oldMouseX)) > 3 || Math.abs((mouse.y - oldMouseY)) > 3){
-		CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y);
-		console.log(oldMouseX,oldMouseY);
+		if ((Math.abs((mouse.x - oldMouseX)) < 15 && Math.abs((mouse.x - oldMouseX)) > 3) || (Math.abs((mouse.y - oldMouseY)) < 15) && Math.abs((mouse.y - oldMouseY)) > 3){
+
+		} else if ((Math.abs((mouse.x - oldMouseX)) < 15 && Math.abs((mouse.x - oldMouseX)) > 3) || (Math.abs((mouse.y - oldMouseY)) < 15) && Math.abs((mouse.y - oldMouseY)) > 3){
+			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,20);
 		}
+		
+		
 	}
 	oldMouseX = mouse.x;
 	oldMouseY = mouse.y;
 }
 
-function CreateLine(x,y,x2,y2){
+function CreateLine(x,y,x2,y2,perc){
 line = new Group();
 let moveAmount;
 line.visible = true;
@@ -49,7 +51,6 @@ spritething.visible = false;
 		let yMove = yDifference*(percent/100);
 		moveAmount = [xMove,yMove];
 	}
-	perc = 12;
 	SetMoveAmount(x,y,x2,y2,perc);
 	console.log(moveAmount);
 	spritething.x = x;
