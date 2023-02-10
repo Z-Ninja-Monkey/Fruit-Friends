@@ -6,6 +6,7 @@ let oldMouseX;
 let oldMouseY;
 function setup() {
 	new Canvas(1000, 590);
+	frameRate(60);
 	world.gravity.y = 15;
 	img = loadImage('assets/thingy5.png');
 	thingy = new Sprite(100,30);
@@ -21,8 +22,9 @@ function draw() {
 	clear();
 	background('gray');
 	if (mouse.pressing()){
-		if ((Math.abs((mouse.x - oldMouseX)) < 15 && Math.abs((mouse.x - oldMouseX)) > 3) || (Math.abs((mouse.y - oldMouseY)) < 15) && Math.abs((mouse.y - oldMouseY)) > 3){
-
+		
+		if ((Math.abs((mouse.x - oldMouseX)) < 40 && Math.abs((mouse.x - oldMouseX)) > 15) || (Math.abs((mouse.y - oldMouseY)) < 40) && Math.abs((mouse.y - oldMouseY)) > 15){
+			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,10);
 		} else if ((Math.abs((mouse.x - oldMouseX)) < 15 && Math.abs((mouse.x - oldMouseX)) > 3) || (Math.abs((mouse.y - oldMouseY)) < 15) && Math.abs((mouse.y - oldMouseY)) > 3){
 			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,20);
 		}
