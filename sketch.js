@@ -4,27 +4,57 @@ let img;
 let line;
 let oldMouseX;
 let oldMouseY;
+let bob;
+let frame;
+let img2;
+let bobBanana;
+
+function preload(){
+	img3 = loadImage('assets/banana2.png');
+	img2 = loadImage('assets/banana.png');
+	img = loadImage('assets/thingy5.png');
+}
+
 function setup() {
 	new Canvas(1000, 590);
+
+	frame = 0;
 	frameRate(60);
+
 	world.gravity.y = 15;
-	img = loadImage('assets/thingy5.png');
+
 	thingy = new Sprite(100,30);
 	thingy.img = img;
 	thingy.r = 20;
 	thingy.collider = 'dynamic';
 	thingy.layer = 1;
 	thingy.bounciness = 0;
-	
+
+	platform = new Sprite(100,100, 100, 20, 'static');
+	img2.resize(150,0);
+
+	BobTheBanana(110,400,0);
+
+}
+
+function BobTheBanana(x,y,rotate){
+	bobBanana = new Sprite(x,y,100,20);
+	bobBanana.collider = 'static';
+	bobBanana.img = img2;
+	bobBanana.rotation = rotate; 
+	bobBanana.bounciness = 1;
 }
 
 function draw() {
+	if (thingy.coo)
+	frame += 1;
 	clear();
 	background('gray');
 	if (mouse.pressing()){
-		
-		if ((Math.abs((mouse.x - oldMouseX)) < 40 && Math.abs((mouse.x - oldMouseX)) > 15) || (Math.abs((mouse.y - oldMouseY)) < 40) && Math.abs((mouse.y - oldMouseY)) > 15){
-			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,10);
+		if (Math.abs((mouse.x - oldMouseX)) > 40 || Math.abs((mouse.y - oldMouseY)) > 40){
+			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,6);
+	    } else if ((Math.abs((mouse.x - oldMouseX)) < 40 && Math.abs((mouse.x - oldMouseX)) > 15) || (Math.abs((mouse.y - oldMouseY)) < 40) && Math.abs((mouse.y - oldMouseY)) > 15){
+			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,12);
 		} else if ((Math.abs((mouse.x - oldMouseX)) < 15 && Math.abs((mouse.x - oldMouseX)) > 3) || (Math.abs((mouse.y - oldMouseY)) < 15) && Math.abs((mouse.y - oldMouseY)) > 3){
 			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,20);
 		}
@@ -33,6 +63,14 @@ function draw() {
 	}
 	oldMouseX = mouse.x;
 	oldMouseY = mouse.y;
+	if (frame === 300){
+		platform.collider = 'none';
+		platform.visible = false;
+		console.log('yes it was me that ran');
+		//thingy.bounciness = 0.5;
+
+	}
+	console.log(frame);
 }
 
 function CreateLine(x,y,x2,y2,perc){
