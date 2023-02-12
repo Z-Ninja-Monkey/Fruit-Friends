@@ -9,6 +9,8 @@ let frame;
 let img2;
 let bobBanana;
 let bobTheBanana;
+let frame2;
+let bounce;
 
 function preload(){
 	img3 = loadImage('assets/banana2.png');
@@ -18,6 +20,7 @@ function preload(){
 
 function setup() {
 	new Canvas(1000, 590);
+	world.allowSleeping = true;
 
 	frame = 0;
 	frameRate(60);
@@ -50,13 +53,31 @@ function BobTheBanana(x,y,rotate){
 }
 
 function draw() {
-	if (thingy.collides(bobTheBanana)){
-		bobBanana.img = img3;
-	}
+
 		
 	frame += 1;
+	frame2 += 1;
 	clear();
 	background('gray');
+	if (thingy.collides(bobTheBanana)){
+		frame2 = 0
+	} else if (frame2 > 2) {
+		bounce = true;
+		if (frame2 > 15){
+			bounce = false;
+		}
+	} else{
+		bounce = false;
+	}
+	if (bounce === true){
+		bobTheBanana.img = img3;
+		bobTheBanana[0].img.offset.y = -20;
+	} else {
+		bobTheBanana.img = img2
+	}
+	
+
+
 	if (mouse.pressing()){
 		if (Math.abs((mouse.x - oldMouseX)) > 40 || Math.abs((mouse.y - oldMouseY)) > 40){
 			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,11);
@@ -77,7 +98,7 @@ function draw() {
 		//thingy.bounciness = 0.5;
 
 	}
-	console.log(frame);
+	//console.log(frame);
 }
 
 function CreateLine(x,y,x2,y2,perc){
