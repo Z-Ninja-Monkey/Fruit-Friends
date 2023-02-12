@@ -8,6 +8,7 @@ let bob;
 let frame;
 let img2;
 let bobBanana;
+let bobTheBanana;
 
 function preload(){
 	img3 = loadImage('assets/banana2.png');
@@ -32,13 +33,16 @@ function setup() {
 
 	platform = new Sprite(100,100, 100, 20, 'static');
 	img2.resize(150,0);
-
+	img3.resize(150,0);
+	
+	//img2.rotate = 123;
+	bobTheBanana = new Group();
 	BobTheBanana(110,400,0);
 
 }
 
 function BobTheBanana(x,y,rotate){
-	bobBanana = new Sprite(x,y,100,20);
+	bobBanana = new bobTheBanana.Sprite(x,y,100,20);
 	bobBanana.collider = 'static';
 	bobBanana.img = img2;
 	bobBanana.rotation = rotate; 
@@ -46,17 +50,20 @@ function BobTheBanana(x,y,rotate){
 }
 
 function draw() {
-	if (thingy.coo)
+	if (thingy.collides(bobTheBanana)){
+		bobBanana.img = img3;
+	}
+		
 	frame += 1;
 	clear();
 	background('gray');
 	if (mouse.pressing()){
 		if (Math.abs((mouse.x - oldMouseX)) > 40 || Math.abs((mouse.y - oldMouseY)) > 40){
-			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,6);
+			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,11);
 	    } else if ((Math.abs((mouse.x - oldMouseX)) < 40 && Math.abs((mouse.x - oldMouseX)) > 15) || (Math.abs((mouse.y - oldMouseY)) < 40) && Math.abs((mouse.y - oldMouseY)) > 15){
-			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,12);
-		} else if ((Math.abs((mouse.x - oldMouseX)) < 15 && Math.abs((mouse.x - oldMouseX)) > 3) || (Math.abs((mouse.y - oldMouseY)) < 15) && Math.abs((mouse.y - oldMouseY)) > 3){
-			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,20);
+			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,16);
+		} else if ((Math.abs((mouse.x - oldMouseX)) < 15 && Math.abs((mouse.x - oldMouseX)) > 2) || (Math.abs((mouse.y - oldMouseY)) < 15) && Math.abs((mouse.y - oldMouseY)) > 2){
+			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,30);
 		}
 		
 		
