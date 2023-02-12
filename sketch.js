@@ -13,7 +13,7 @@ let frame2;
 let bounce;
 
 function preload(){
-	img3 = loadImage('assets/banana2.png');
+	img5 = loadImage('assets/banana4.png');
 	img2 = loadImage('assets/banana.png');
 	img = loadImage('assets/thingy5.png');
 }
@@ -35,21 +35,23 @@ function setup() {
 	thingy.bounciness = 0;
 
 	platform = new Sprite(100,100, 100, 20, 'static');
+
 	img2.resize(150,0);
-	img3.resize(150,0);
+	img5.resize(150,0);
 	
 	//img2.rotate = 123;
 	bobTheBanana = new Group();
-	BobTheBanana(110,400,0);
+	BobTheBanana(90,400,0,true);
 
 }
 
-function BobTheBanana(x,y,rotate){
+function BobTheBanana(x,y,rotate,debug){
 	bobBanana = new bobTheBanana.Sprite(x,y,100,20);
 	bobBanana.collider = 'static';
 	bobBanana.img = img2;
 	bobBanana.rotation = rotate; 
 	bobBanana.bounciness = 1;
+	bobBanana.debug = debug;
 }
 
 function draw() {
@@ -61,17 +63,27 @@ function draw() {
 	background('gray');
 	if (thingy.collides(bobTheBanana)){
 		frame2 = 0
+		bounce = 3;
 	} else if (frame2 > 2) {
-		bounce = true;
-		if (frame2 > 15){
-			bounce = false;
+		//bounce = 1;
+		if (frame2 > 5){
+			bounce = 2;
+		} 
+		if (frame2 > 7){
+			bounce = 0;
 		}
 	} else{
-		bounce = false;
+		//bounce = false;
 	}
-	if (bounce === true){
-		bobTheBanana.img = img3;
-		bobTheBanana[0].img.offset.y = -20;
+	if (bounce === 1){
+		bobTheBanana.img = img4;
+		bobTheBanana[0].img.offset.y = -10;
+	} else if (bounce === 2) {
+		bobTheBanana.img = img2
+		bobTheBanana[0].img.offset.y = 10;
+	} else if (bounce === 3){
+		bobTheBanana.img = img5;
+		bobTheBanana[0].img.offset.y = 10;
 	} else {
 		bobTheBanana.img = img2
 	}
@@ -91,7 +103,7 @@ function draw() {
 	}
 	oldMouseX = mouse.x;
 	oldMouseY = mouse.y;
-	if (frame === 300){
+	if (frame === 10){
 		platform.collider = 'none';
 		platform.visible = false;
 		console.log('yes it was me that ran');
