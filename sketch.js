@@ -14,12 +14,17 @@ let bounce;
 let grapes;
 let grapeTimerOn;
 let grapeTimer;
-let firstGrape;
+let firstGrapeTimer;
 let selectedFruit;
-let mouseFollower;
 let orangeTop;
+let mouseFollower;
+let firstBanana;
+let firstGrape;
+
 
 function preload(){
+	img10 = loadImage('assets/highlight2.png');
+	img9 = loadImage('assets/highlight.png');
 	img8 = loadImage('assets/grapes2.png');
 	img7 = loadImage('assets/grapes.png');
 	img6 = loadImage('assets/bananaTop.png');
@@ -39,7 +44,7 @@ function setup() {
 
 	world.gravity.y = 15;
 
-	firstGrape = true;
+	firstGrapeTimer = true;
 
 	thingy = new Sprite(100,110);
 	thingy.img = img;
@@ -50,10 +55,11 @@ function setup() {
 
 	topBar = new Sprite(500,30,1000,60);
 	topBar.collider = 'none';
+	topBar.layer = -1;
 	topBar.color = 'gray';
-	topBarBarrier = new Sprite(500,60,1000,3);
-	topBarBarrier.collider = 'static';
-	topBarBarrier.color = 'black';
+	//topBarBarrier = new Sprite(500,60,1000,3);
+	//topBarBarrier.collider = 'static';
+	//topBarBarrier.color = 'black';
 
 	platform = new Sprite(100,150, 100, 20, 'static');
 
@@ -64,24 +70,35 @@ function setup() {
 	img6.resize(90,0);
 	img7.resize(120,0);
 	img8.resize(75,0);
+	img9.resize(90,50);
 
-	mouseFollower = new Sprite(200,200,10,'k')
+	mouseFollower = new Sprite(200,200,0);
+	mouseFollower.visible = false;
 
 	bobTheBanana = new Group();
+	firstBanana = true;
 	grapes = new Group();
 	BobTheBanana(100,400,30,false);
 	Grapes(300,300);
 
-	orangeTop = new Sprite(50,30,'static');
+	orangeTop = new Sprite(50,30);
+	orangeTop.collider = 'static';
 	orangeTop.img = img5;
 	bananaTop = new Sprite(150,30,'static');
 	bananaTop.img = img6;
 	grapeTop = new Sprite(235,33,'static');
 	grapeTop.img = img8;
 	grapeTop.rotation = 30;
+	highlight = new Sprite(-500,-500,'none');
+	highlight.img = img9
 
-	orangeTop.layer = 10;
-	mouseFollower.layer = 10;
+	mouseFollower.overlaps(thingy);
+	mouseFollower.overlaps(platform);
+	mouseFollower.overlaps(bobTheBanana);
+	mouseFollower.overlaps(grapes);
+	mouseFollower.overlaps(platform);
+
+	selectedFruit = 'none'
 }
 
 function BobTheBanana(x,y,rotate,debug){
@@ -150,23 +167,36 @@ function draw() {
 		grapeTimerOn = true;
 	}
 	if (grapeTimerOn == true){
-		if (firstGrape == true){
+		if (firstGrapeTimer == true){
 			grapeTimer = millis();
-			firstGrape = false
+			firstGrapeTimer = false
 		}
 		if(millis() > grapeTimer + 750){
-			firstGrape = true
+			firstGrapeTimer = true
 			grapeTimerOn = false;
 			grapeTimer = 0
 			world.gravity.y = 15;
 		}
 	}
-	//mouseFollower.overlaps(orangeTop)
-	if (mouseFollower.overlaps(orangeTop)){
-		console.log("pretty please")
+	if (mouseFollower.overlapping(orangeTop)>0 && mouse.pressing()){
+		selectedFruit = 'orange';
+	}else if (mouseFollower.overlapping(bananaTop)>0 && mouse.pressing()){
+		selectedFruit = 'banana';
+	}else if (mouseFollower.overlapping(grapeTop)>0 && mouse.pressing()) {
+		selectedFruit = 'grape'
+	}
+	if (selectedFruit == 'orange'){
+		highlight.x = orangeTop.x;
+		highlight.y = orangeTop.y;
+	}else if (selectedFruit == 'banana'){
+		highlight.x = bananaTop.x;
+		highlight.y = bananaTop.y;
+	}else if (selectedFruit == 'grape'){
+		highlight.x = grapeTop.x;
+		highlight.y = grapeTop.y;
 	}
 
-	if (mouse.pressing() && selectedFruit == 'orange'){
+	if (mouse.pressing() && selectedFruit == 'orange' && mouse.y > 60){
 		if (Math.abs((mouse.x - oldMouseX)) > 40 || Math.abs((mouse.y - oldMouseY)) > 40){
 			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,11,false,'static',false);
 	    } else if ((Math.abs((mouse.x - oldMouseX)) < 40 && Math.abs((mouse.x - oldMouseX)) > 15) || (Math.abs((mouse.y - oldMouseY)) < 40) && Math.abs((mouse.y - oldMouseY)) > 15){
@@ -176,6 +206,16 @@ function draw() {
 		}
 		CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,100,true,'none',true);
 		
+	}
+	if (mouse.released()){
+
+	}
+	if (mouse.pressing() && selectedFruit == 'banana' && mouse.y > 60 && firstBanana == true){
+		BobTheBanana(mouse.x,mouse.y,0,false);
+		firstBanana = false
+	}
+	if (mouse.pressing() && selectedFruit == 'grape' && mouse.y > 60){
+		Grapes(mouse.x,mouse.y,false)
 	}
 	oldMouseX = mouse.x;
 	oldMouseY = mouse.y;
