@@ -208,14 +208,16 @@ function draw() {
 		
 	}
 	if (mouse.released()){
-
+		firstBanana = true;
+		firstGrape = true;
 	}
 	if (mouse.pressing() && selectedFruit == 'banana' && mouse.y > 60 && firstBanana == true){
 		BobTheBanana(mouse.x,mouse.y,0,false);
-		firstBanana = false
+		firstBanana = false;
 	}
-	if (mouse.pressing() && selectedFruit == 'grape' && mouse.y > 60){
-		Grapes(mouse.x,mouse.y,false)
+	if (mouse.pressing() && selectedFruit == 'grape' && mouse.y > 60 && firstGrape == true){
+		Grapes(mouse.x,mouse.y,false);
+		firstGrape = false;
 	}
 	oldMouseX = mouse.x;
 	oldMouseY = mouse.y;
