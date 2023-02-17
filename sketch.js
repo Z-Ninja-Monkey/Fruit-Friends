@@ -12,8 +12,18 @@ let bobTheBanana;
 let frame2;
 let bounce;
 let grapes;
+let grapeTimerOn;
+let grapeTimer;
+let firstGrape;
+let selectedFruit;
+let mouseFollower;
+let orangeTop;
 
 function preload(){
+	img8 = loadImage('assets/grapes2.png');
+	img7 = loadImage('assets/grapes.png');
+	img6 = loadImage('assets/bananaTop.png');
+	img5 = loadImage('assets/orange2.png');
 	img4 = loadImage('assets/orange.png');
 	img3 = loadImage('assets/banana4.png');
 	img2 = loadImage('assets/banana.png');
@@ -29,25 +39,49 @@ function setup() {
 
 	world.gravity.y = 15;
 
-	thingy = new Sprite(100,30);
+	firstGrape = true;
+
+	thingy = new Sprite(100,110);
 	thingy.img = img;
 	thingy.r = 20;
 	thingy.collider = 'dynamic';
 	thingy.layer = 1;
 	thingy.bounciness = 0;
 
-	platform = new Sprite(100,100, 100, 20, 'static');
+	topBar = new Sprite(500,30,1000,60);
+	topBar.collider = 'none';
+	topBar.color = 'gray';
+	topBarBarrier = new Sprite(500,60,1000,3);
+	topBarBarrier.collider = 'static';
+	topBarBarrier.color = 'black';
+
+	platform = new Sprite(100,150, 100, 20, 'static');
 
 	img2.resize(150,0);
 	img3.resize(150,0);
 	img4.resize(30,0);
-	
-	//img2.rotate = 123;
+	img5.resize(60,0);
+	img6.resize(90,0);
+	img7.resize(120,0);
+	img8.resize(75,0);
+
+	mouseFollower = new Sprite(200,200,10,'k')
+
 	bobTheBanana = new Group();
 	grapes = new Group();
-	BobTheBanana(100,400,0,false);
-	Grapes(50,300);
+	BobTheBanana(100,400,30,false);
+	Grapes(300,300);
 
+	orangeTop = new Sprite(50,30,'static');
+	orangeTop.img = img5;
+	bananaTop = new Sprite(150,30,'static');
+	bananaTop.img = img6;
+	grapeTop = new Sprite(235,33,'static');
+	grapeTop.img = img8;
+	grapeTop.rotation = 30;
+
+	orangeTop.layer = 10;
+	mouseFollower.layer = 10;
 }
 
 function BobTheBanana(x,y,rotate,debug){
@@ -61,19 +95,27 @@ function BobTheBanana(x,y,rotate,debug){
 
 function Grapes(x,y){
 	grape = new grapes.Sprite(x,y, 40);
-	grape.collider = 'none';
+	grape.collider = 'static';
+	grape.img = img7;
+}
+function Cherry(){
 
 }
 
 function draw() {
 
-		
 	frame += 1;
 	frame2 += 1;
 	clear();
-	background('gray');
+	background('lightgray');
+
+	//mouseFollower.speed = 5;
+	mouseFollower.moveTowards(mouse,1);
+
+	//console.log(mouseFollower.x);
+
 	if (thingy.collides(bobTheBanana)){
-		frame2 = 0
+		frame2 = 0;
 		bounce = 3;
 	} else if (frame2 > 2) {
 		//bounce = 1;
@@ -102,9 +144,29 @@ function draw() {
 	
 	if (thingy.overlaps(grapes)){
 		grapes.remove();
+		world.gravity.y = 3;
+		thingy.velocity.y = 1;
+		thingy.rotationSpeed /= 2;
+		grapeTimerOn = true;
+	}
+	if (grapeTimerOn == true){
+		if (firstGrape == true){
+			grapeTimer = millis();
+			firstGrape = false
+		}
+		if(millis() > grapeTimer + 750){
+			firstGrape = true
+			grapeTimerOn = false;
+			grapeTimer = 0
+			world.gravity.y = 15;
+		}
+	}
+	//mouseFollower.overlaps(orangeTop)
+	if (mouseFollower.overlaps(orangeTop)){
+		console.log("pretty please")
 	}
 
-	if (mouse.pressing()){
+	if (mouse.pressing() && selectedFruit == 'orange'){
 		if (Math.abs((mouse.x - oldMouseX)) > 40 || Math.abs((mouse.y - oldMouseY)) > 40){
 			CreateLine(oldMouseX,oldMouseY,mouse.x,mouse.y,11,false,'static',false);
 	    } else if ((Math.abs((mouse.x - oldMouseX)) < 40 && Math.abs((mouse.x - oldMouseX)) > 15) || (Math.abs((mouse.y - oldMouseY)) < 40) && Math.abs((mouse.y - oldMouseY)) > 15){
